@@ -1,0 +1,27 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "step": {
+      "user": {
+        "description": "Set up your Water provider Home instance to allow monitoring.",
+        "data": {
+          "input_username": "[%key:common::config_flow::data::username%]",
+          "input_password": "[%key:common::config_flow::data::password%]",
+          "input_url": "[%key:common::config_flow::data::url%]"
+        }
+      },
+      "get_identifier": {
+        "data": {
+          "input_meter_id": "Water meter identifier"
+        }
+      }
+    }
+  }
+}

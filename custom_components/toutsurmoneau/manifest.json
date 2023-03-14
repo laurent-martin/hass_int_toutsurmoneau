@@ -1,0 +1,17 @@
+{
+  "domain": "toutsurmoneau",
+  "name": "Tout sur mon eau",
+  "codeowners": [
+    "@laurent-martin"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/toutsurmoneau",
+  "homekit": {},
+  "iot_class": "cloud_polling",
+  "requirements": [
+    "toutsurmoneau==0.0.17"
+  ],
+  "ssdp": [],
+  "zeroconf": []
+}
