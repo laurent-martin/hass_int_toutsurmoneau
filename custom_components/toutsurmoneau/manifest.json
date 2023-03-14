@@ -1,12 +1,13 @@
 {
-  "domain": "toutsurmoneau",
+  "domain": "portail_eau_fr",
+  "version": "0.0.1",
   "name": "Tout sur mon eau",
   "codeowners": [
     "@laurent-martin"
   ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://www.home-assistant.io/integrations/toutsurmoneau",
+  "documentation": "https://github.com/laurent-martin/hass_int_toutsurmoneau",
   "homekit": {},
   "iot_class": "cloud_polling",
   "requirements": [
