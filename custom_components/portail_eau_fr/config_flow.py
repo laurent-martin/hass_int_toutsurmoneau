@@ -1,4 +1,4 @@
-"""Config flow for Tout sur mon eau integration."""
+"""Config flow for water provider portal."""
 from __future__ import annotations
 
 import toutsurmoneau

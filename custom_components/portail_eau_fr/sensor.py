@@ -1,4 +1,4 @@
-"""Sensor for toutsurmoneau."""
+"""Sensor for water provider portal."""
 from datetime import datetime, timedelta
 import logging
 import toutsurmoneau
