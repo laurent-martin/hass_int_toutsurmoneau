@@ -46,16 +46,20 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     url=user_input[USER_INPUT_URL],
                     session=async_get_clientsession(self.hass),
                 )
-                # store for next step
+                # getting meter id may fail ?
+                try:
+                    meter_identifier = await client.async_meter_id()
+                    _LOGGER.debug("default_meter_id %s", meter_identifier)
+                except Exception:
+                    meter_identifier = None
+                # at least authenticate the user for next step
                 self.data = {
                     "client": client,
-                    "default_meter_id": await client.async_meter_id(),
-                    "contrat": (await client.async_contracts())[0],
+                    "default_meter_id": meter_identifier,
+                    "contract": (await client.async_contracts())[0],
                 }
-                _LOGGER.debug("default_meter_id %s",
-                              self.data["default_meter_id"])
             except Exception:  # pylint: disable=broad-except
-                _LOGGER.exception("Unexpected exception")
+                _LOGGER.exception("An exception ocurred")
                 errors_for_form["base"] = "unknown"
             else:
                 # next step
@@ -92,7 +96,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors_for_form: dict[str, str] = {}
         if user_input is not None:
             try:
-                _LOGGER.debug("got input %s", user_input)
+                _LOGGER.debug("Got input %s", user_input)
                 client: toutsurmoneau.AsyncClient = self.data["client"]
                 client._id = user_input[USER_INPUT_METER_ID]
                 # check by getting meter specific data
@@ -108,10 +112,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "meter_id": client._id,
                     "url": client._base_url,
                 }
-                water_provider_name = self.data["contrat"]["brandCode"]
+                water_provider_name = self.data["contract"]["brandCode"]
                 return self.async_create_entry(
                     title=water_provider_name, data=final_config_data
                 )
+        elif self.data["default_meter_id"] is None:
+            errors_for_form["base"] = "Cannot determine meter id automatically."
+            self.data["default_meter_id"] = ""
         return self.async_show_form(
             step_id="get_identifier",
             data_schema=vol.Schema(
