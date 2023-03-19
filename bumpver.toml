@@ -1,0 +1,10 @@
+[bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
+commit_message = "bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = true
+
+[bumpver.file_patterns]
+"custom_components/portail_eau_fr/manifest.json" = [ "\"version\": \"{version}\"" ]
