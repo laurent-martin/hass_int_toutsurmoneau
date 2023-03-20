@@ -8,10 +8,15 @@
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/laurent-martin/hass_int_toutsurmoneau",
+  "issue_tracker": "https://github.com/laurent-martin/hass_int_toutsurmoneau/issues",
   "homekit": {},
   "iot_class": "cloud_polling",
   "requirements": [
-    "toutsurmoneau==0.0.17"
+    "toutsurmoneau==0.0.18"
+  ],
+  "loggers": [
+    "portail_eau_fr",
+    "toutsurmoneau"
   ],
   "ssdp": [],
   "zeroconf": []

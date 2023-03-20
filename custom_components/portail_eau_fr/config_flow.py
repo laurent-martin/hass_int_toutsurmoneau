@@ -3,17 +3,17 @@ from __future__ import annotations
 
 import toutsurmoneau
 import logging
+import asyncio
 from urllib.parse import urlparse
 from typing import Any
-
 import voluptuous as vol
-
-from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.helpers.selector import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.core import callback
 
 from .const import (
     DOMAIN,
@@ -26,10 +26,17 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class ConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Tout sur mon eau."""
 
     VERSION = 1
+
+    # activate the option flow
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry):
+        """Get the options flow for this handler."""
+        return MyOptionsFlow(config_entry)
 
     # "user" means: started by user. This is the initial form
     async def async_step_user(
@@ -50,7 +57,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 try:
                     meter_identifier = await client.async_meter_id()
                     _LOGGER.debug("default_meter_id %s", meter_identifier)
-                except Exception:
+                except toutsurmoneau.ClientError:
                     meter_identifier = None
                 # at least authenticate the user for next step
                 self.data = {
@@ -130,3 +137,63 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ),
             errors=errors_for_form,
         )
+
+
+class MyOptionsFlow(OptionsFlow):
+    """Handle options."""
+
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        """Initialize options flow."""
+        self.config_entry = config_entry
+        self._import_task = None
+        _LOGGER.debug("option flow started")
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage options."""
+        _LOGGER.debug("showing menu")
+        return self.async_show_menu(
+            step_id="options_init",
+            menu_options=[
+                "import_history",
+            ],
+        )
+
+    async def async_step_import_history(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage import."""
+        _LOGGER.debug("in import_history")
+        if not self._import_task:
+            self._import_task = self.hass.async_create_task(
+                self._async_import_historical_data()
+            )
+            return self.async_show_progress(
+                step_id="wait_for_pairing_mode",
+                progress_action="wait_for_pairing_mode",
+            )
+
+        try:
+            await self._import_task
+        except asyncio.TimeoutError:
+            self._import_task = None
+            return self.async_show_progress_done(next_step_id="pairing_timeout")
+
+        self._import_task = None
+
+        return self.async_show_progress_done(next_step_id="finish")
+
+    async def async_step_finish(self, user_input=None):
+        if not user_input:
+            return self.async_show_form(step_id="finish")
+        return self.async_create_entry(title="Some title", data={})
+
+    async def _async_import_historical_data(self) -> None:
+        """Process advertisements until pairing mode is detected."""
+        count = 10
+
+        while count > 0:
+            _LOGGER.debug("Loop %d", count)
+            count = count - 1
+            task = asyncio.sleep(1)

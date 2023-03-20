@@ -18,7 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Tout sur mon eau from a config entry."""
-    _LOGGER.debug(f">>>>>>>>>>> config: {entry.data}")
+    _LOGGER.debug(f"async_setup_entry: config: {entry.data}")
 
     hass.data.setdefault(DOMAIN, {})
     # TODO 1. Create API instance
@@ -28,6 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         meter_id=entry.data["meter_id"],
         session=async_get_clientsession(hass),
     )
+    _LOGGER.debug(f"Client created. Checking credentials")
     # TODO 2. Validate the API connection (and authentication)
     if not await client.async_check_credentials():
         return False
