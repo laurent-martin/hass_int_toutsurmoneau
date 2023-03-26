@@ -1,6 +1,6 @@
 """Constants for water provider portal."""
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 DOMAIN = "portail_eau_fr"
 USER_INPUT_USERNAME = "input_username"
