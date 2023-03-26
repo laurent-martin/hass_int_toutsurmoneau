@@ -6,7 +6,8 @@
         "error": {
             "cannot_connect": "Failed to connect",
             "invalid_auth": "Invalid authentication",
-            "unknown": "Unexpected error"
+            "unknown": "Unexpected error",
+            "login_failed": "Failed to login. Verify login details are correct."
         },
         "step": {
             "get_identifier": {

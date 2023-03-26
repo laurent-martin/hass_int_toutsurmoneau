@@ -7,4 +7,6 @@ tag = true
 push = true
 
 [bumpver.file_patterns]
+"README.md" = [ "Version {version}" ]
 "custom_components/portail_eau_fr/manifest.json" = [ "\"version\": \"{version}\"" ]
+"custom_components/portail_eau_fr/const.py" = [ "VERSION = \"{version}\"" ]
