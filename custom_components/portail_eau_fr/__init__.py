@@ -8,7 +8,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN
+from .const import DOMAIN, VERSION
 
 # Supported platforms
 PLATFORMS: list[Platform] = [Platform.SENSOR]
@@ -18,7 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Tout sur mon eau from a config entry."""
-    _LOGGER.debug(f"async_setup_entry: config: {entry.data}")
+    _LOGGER.debug(f"async_setup_entry: version: {VERSION}, config: {entry.data}")
 
     hass.data.setdefault(DOMAIN, {})
     # TODO 1. Create API instance
@@ -26,6 +26,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         username=entry.data["username"],
         password=entry.data["password"],
         meter_id=entry.data["meter_id"],
+        url=entry.data["url"],
         session=async_get_clientsession(hass),
     )
     _LOGGER.debug(f"Client created. Checking credentials")
