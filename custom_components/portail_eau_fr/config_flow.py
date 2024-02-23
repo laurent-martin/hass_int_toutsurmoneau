@@ -140,7 +140,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                     "username": client._username,
                     "password": client._password,
                     "meter_id": client._id,
-                    "url": client._base_url,
+                    "url": client._provider_url,
                 }
                 water_provider_name = self.data["contract"]["brandCode"]
                 return self.async_create_entry(
