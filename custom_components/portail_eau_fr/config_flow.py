@@ -53,7 +53,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         """Handle the initial step when new entity is added."""
         # prepare error message for input form, in case there is a problem
         errors_for_form: dict[str, str] = {}
-        # input was provided (second call) so try to init
+        # input was provided (second call)
         if user_input is not None:
             # create client with provided credentials
             client = toutsurmoneau.AsyncClient(
@@ -68,13 +68,13 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
             if await client.async_check_credentials():
                 meter_identifier = None
                 try:
-                    # getting default meter id may fail ?
+                    # getting default meter id (may fail)
                     meter_identifier = await client.async_meter_id()
                     _LOGGER.debug("default_meter_id %s", meter_identifier)
                 except toutsurmoneau.ClientError as error:
                     _LOGGER.debug("Error getting meter id: %s", error)
                 try:
-                    # at least authenticate the user for next step
+                    # provide data for next step
                     self.data = {
                         "client": client,
                         "default_meter_id": meter_identifier,
@@ -83,10 +83,11 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                     # no error: go to next step
                     return await self.async_step_get_identifier()
                 except Exception as e:  # pylint: disable=broad-except
-                    _LOGGER.exception(f"An exception ocurred: {e}")
+                    _LOGGER.exception(f"Error: {e}")
                     errors_for_form["base"] = "unknown"
             else:
                 errors_for_form["base"] = "login_failed"
+        # no input provided (first call) or an error occurred
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
@@ -123,7 +124,9 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         """Handle the meter id step."""
         _LOGGER.debug("get_identifier, default = %s",
                       self.data["default_meter_id"])
+        # prepare error message for input form, in case there is a problem
         errors_for_form: dict[str, str] = {}
+        # input was provided (second call)
         if user_input is not None:
             try:
                 _LOGGER.debug("Got input %s", user_input)
@@ -131,8 +134,8 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                 client._id = user_input[USER_INPUT_METER_ID]
                 # check by getting meter specific data
                 await client.async_monthly_recent()
-            except Exception:  # pylint: disable=broad-except
-                _LOGGER.exception("Unexpected exception")
+            except Exception as e:  # pylint: disable=broad-except
+                _LOGGER.exception(f"Error: {e}")
                 errors_for_form["base"] = "unknown"
             else:
                 # configuration data to be stored in hass
@@ -149,6 +152,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         elif self.data["default_meter_id"] is None:
             errors_for_form["base"] = "Cannot determine meter id automatically."
             self.data["default_meter_id"] = ""
+        # no input provided (first call) or an error occurred
         return self.async_show_form(
             step_id="get_identifier",
             data_schema=vol.Schema(
@@ -170,6 +174,10 @@ class MyOptionsFlow(OptionsFlow):
         self.config_entry = config_entry
         self._import_task = None
         _LOGGER.debug("option flow started")
+
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
+        """Manual user configuration."""
+        return await self.async_step_init(user_input)
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None

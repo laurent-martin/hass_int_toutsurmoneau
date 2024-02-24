@@ -16,9 +16,11 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 _LOGGER = logging.getLogger(__name__)
 
 
+# called after async_create_entry with data from config_flow
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Tout sur mon eau from a config entry."""
-    _LOGGER.debug(f"async_setup_entry: version: {VERSION}, config: {entry.data}")
+    _LOGGER.debug(f"async_setup_entry: version: {
+                  VERSION}, config: {entry.data}")
 
     hass.data.setdefault(DOMAIN, {})
     # TODO 1. Create API instance
