@@ -2,7 +2,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 
-Version 0.0.6
+Version 0.0.7
 
 Home assistant integration for Suez tout sur mon eau
 
