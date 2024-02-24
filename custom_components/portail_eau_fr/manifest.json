@@ -12,7 +12,7 @@
   "homekit": {},
   "iot_class": "cloud_polling",
   "requirements": [
-    "toutsurmoneau==0.0.22"
+    "toutsurmoneau==0.0.23"
   ],
   "loggers": [
     "portail_eau_fr",
