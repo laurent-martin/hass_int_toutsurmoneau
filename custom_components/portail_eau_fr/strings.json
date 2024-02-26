@@ -1,14 +1,5 @@
 {
   "config": {
-    "abort": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
-    },
-    "error": {
-      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
-      "unknown": "[%key:common::config_flow::error::unknown%]",
-      "login_failed": "Failed to login. Verify login details are correct."
-    },
     "step": {
       "user": {
         "description": "Set up your Water provider Home instance to allow monitoring.",
@@ -21,6 +12,25 @@
       "get_identifier": {
         "data": {
           "input_meter_id": "Water meter identifier"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]",
+      "login_failed": "Failed to login. Verify login details are correct."
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Water meter options",
+        "menu_options": {
+          "import_history": "(NOT IMPLEMENTED)Import historical data"
         }
       }
     }

@@ -27,8 +27,11 @@ from .const import (
     USER_INPUT_PASSWORD,
     USER_INPUT_URL,
     STEP_PREFIX,
+    STEP_USER_START,
+    STEP_GET_METER_ID,
     STEP_IMPORT,
-    STEP_FINISH
+    STEP_FINISH,
+    STEP_INIT,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,13 +47,15 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: ConfigEntry):
         """Get the options flow for this handler."""
-        return MyOptionsFlow(config_entry)
+        return MonEauOptionsFlow(config_entry)
 
-    # "user" means: started by user. This is the initial form
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handle the initial step when new entity is added."""
+        """Handle a flow initiated by the **user**.
+
+        Initial step when new entity is added."""
+        assert (STEP_PREFIX+STEP_USER_START == inspect.stack()[0].function)
         # prepare error message for input form, in case there is a problem
         errors_for_form: dict[str, str] = {}
         # input was provided (second call)
@@ -89,7 +94,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors_for_form["base"] = "login_failed"
         # no input provided (first call) or an error occurred
         return self.async_show_form(
-            step_id="user",
+            step_id=STEP_USER_START,
             data_schema=vol.Schema(
                 {
                     vol.Required(
@@ -122,6 +127,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle the meter id step."""
+        assert (STEP_PREFIX+STEP_GET_METER_ID == inspect.stack()[0].function)
         _LOGGER.debug("get_identifier, default = %s",
                       self.data["default_meter_id"])
         # prepare error message for input form, in case there is a problem
@@ -154,7 +160,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
             self.data["default_meter_id"] = ""
         # no input provided (first call) or an error occurred
         return self.async_show_form(
-            step_id="get_identifier",
+            step_id=STEP_GET_METER_ID,
             data_schema=vol.Schema(
                 {
                     vol.Required(
@@ -165,27 +171,26 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors_for_form,
         )
 
+# https://developers.home-assistant.io/docs/data_entry_flow_index/
 
-class MyOptionsFlow(OptionsFlow):
+
+class MonEauOptionsFlow(OptionsFlow):
     """Handle options."""
 
     def __init__(self, config_entry: ConfigEntry) -> None:
         """Initialize options flow."""
         self.config_entry = config_entry
         self._import_task = None
-        _LOGGER.debug("option flow started")
-
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
-        """Manual user configuration."""
-        return await self.async_step_init(user_input)
+        _LOGGER.debug("MonEauOptionsFlow started")
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Manage options."""
-        _LOGGER.debug("showing menu")
+        """First step."""
+        assert (STEP_PREFIX+STEP_INIT == inspect.stack()[0].function)
+        _LOGGER.debug("in {STEP_INIT}")
         return self.async_show_menu(
-            step_id="options_init",
+            step_id=STEP_INIT,
             menu_options=[
                 STEP_IMPORT,
             ],
@@ -197,7 +202,7 @@ class MyOptionsFlow(OptionsFlow):
     ) -> FlowResult:
         """Manage import."""
         assert (STEP_PREFIX+STEP_IMPORT == inspect.stack()[0].function)
-        _LOGGER.debug(f"in import_history")
+        _LOGGER.debug(f"in {STEP_IMPORT}")
         if not self._import_task:
             _LOGGER.debug(f"create task")
             self._import_task = self.hass.async_create_task(
@@ -207,6 +212,7 @@ class MyOptionsFlow(OptionsFlow):
             return self.async_show_progress(
                 step_id=STEP_IMPORT,
                 progress_action=STEP_IMPORT,
+                progress_task=self._import_task
             )
 
         try:
@@ -215,7 +221,7 @@ class MyOptionsFlow(OptionsFlow):
             _LOGGER.debug("Task finished")
         except asyncio.TimeoutError:
             _LOGGER.debug("Task timeout")
-            return self.async_show_progress_done(next_step_id="pairing_timeout")
+            return self.async_show_progress_done(next_step_id=STEP_INIT)
         finally:
             self._import_task = None
 
@@ -236,6 +242,7 @@ class MyOptionsFlow(OptionsFlow):
             while count > 0:
                 _LOGGER.debug("Loop %d", count)
                 count = count - 1
+                # simulate API call
                 await asyncio.sleep(1)
             _LOGGER.debug("Finished Loop")
         finally:

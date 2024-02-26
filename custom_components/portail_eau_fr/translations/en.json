@@ -1,28 +1,38 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Device is already configured"
-        },
-        "error": {
-            "cannot_connect": "Failed to connect",
-            "invalid_auth": "Invalid authentication",
-            "unknown": "Unexpected error",
-            "login_failed": "Failed to login. Verify login details are correct."
-        },
-        "step": {
-            "get_identifier": {
-                "data": {
-                    "input_meter_id": "Water meter identifier"
-                }
-            },
-            "user": {
-                "data": {
-                    "input_password": "Password",
-                    "input_url": "URL",
-                    "input_username": "Username"
-                },
-                "description": "Set up your Water provider Home instance to allow monitoring."
-            }
+  "config": {
+    "step": {
+      "user": {
+        "description": "Set up your Water provider Home instance to allow monitoring.",
+        "data": {
+          "input_username": "Username",
+          "input_password": "Password",
+          "input_url": "Url"
         }
+      },
+      "get_identifier": {
+        "data": {
+          "input_meter_id": "Water meter identifier"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error",
+      "login_failed": "Failed to login. Verify login details are correct."
+  },
+"abort": {
+  "already_configured": "Device is already configured"
+}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Water meter options",
+        "menu_options": {
+          "import_history": "(NOT IMPLEMENTED)Import historical data"
+        }
+      }
     }
+  }
 }
