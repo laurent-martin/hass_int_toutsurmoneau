@@ -68,7 +68,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                 session=async_get_clientsession(self.hass),
             )
             # ensure we did not keep login from last time
-            client.ensure_logout()
+            # client.ensure_logout()
             # check login
             if await client.async_check_credentials():
                 meter_identifier = None
