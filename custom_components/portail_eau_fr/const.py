@@ -1,6 +1,6 @@
 """Constants for water provider portal."""
 
-VERSION = "0.0.7"
+VERSION = "0.0.8"
 
 DOMAIN = "portail_eau_fr"
 
