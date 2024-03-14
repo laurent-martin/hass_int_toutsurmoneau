@@ -58,3 +58,15 @@ This can be used as "Water source" that can be monitored.
 ## To come
 
 I plan to add the possibility to provision all available history back into Home Assistant.
+
+## Debug
+
+To activate debug level, edit the configuration.yaml file and add:
+
+```yaml
+logger:
+  default: info
+  logs:
+    toutsurmoneau: debug
+    custom_components.toutsurmoneau: debug
+```
