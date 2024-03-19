@@ -31,7 +31,7 @@ push = true
 [tool.bumpver.file_patterns]
 "README.md" = ["{version}", "{pep440_version}"]
 "custom_components/portail_eau_fr/manifest.json" = [ "\"version\": \"{version}\"" ]
-"custom_components/portail_eau_fr/const.py" = [ "VERSION = '{version}''" ]
+"custom_components/portail_eau_fr/const.py" = [ "VERSION = '{version}'" ]
 
 
 [tool.autopep8]
