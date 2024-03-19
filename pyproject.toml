@@ -1,4 +1,25 @@
-[bumpver]
+# see https://peps.python.org/pep-0621/
+[project]
+name = "toutsurmoneau"
+version = "0.0.9"
+description = "Home Assistant integration for https://www.toutsurmoneau.fr/ and other water providers in france."
+readme = "README.md"
+requires-python = ">=3.7"
+license = { file = "LICENSE" }
+authors = [{ name = "Laurent MARTIN", email = "laurent.martin.l@gmail.com" }]
+maintainers = [
+  { name = "Laurent MARTIN", email = "laurent.martin.l@gmail.com" },
+]
+keywords = ["suez", "toutsurmoneau"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = ['toutsurmoneau']
+
+[tool.bumpver]
 current_version = "0.0.9"
 version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
 commit_message = "bump version {old_version} -> {new_version}"
@@ -6,7 +27,16 @@ commit = true
 tag = true
 push = true
 
-[bumpver.file_patterns]
-"README.md" = [ "Version {version}" ]
+
+[tool.bumpver.file_patterns]
+"README.md" = ["{version}", "{pep440_version}"]
 "custom_components/portail_eau_fr/manifest.json" = [ "\"version\": \"{version}\"" ]
 "custom_components/portail_eau_fr/const.py" = [ "VERSION = \"{version}\"" ]
+
+
+[tool.autopep8]
+max-line-length = 120
+indent-size = 4
+in-place = true
+recursive = true
+aggressive = 1

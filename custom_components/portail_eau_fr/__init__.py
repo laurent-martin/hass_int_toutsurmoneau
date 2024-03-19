@@ -8,7 +8,10 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN, VERSION
+from .const import (
+    DOMAIN,
+    VERSION,
+)
 
 # Supported platforms
 PLATFORMS: list[Platform] = [Platform.SENSOR]

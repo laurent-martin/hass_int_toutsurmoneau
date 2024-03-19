@@ -99,7 +99,7 @@ class ToutSurMonEauEntity(SensorEntity):
     def available(self):
         """Return if entity is available."""
         _LOGGER.debug("available")
-        # true is last update was successful (api available)
+        # true if last update was successful (api available)
         return True
 
     async def async_added_to_hass(self) -> None:
