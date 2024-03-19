@@ -39,4 +39,4 @@ max-line-length = 120
 indent-size = 4
 in-place = true
 recursive = true
-aggressive = 1
+aggressive = 2
