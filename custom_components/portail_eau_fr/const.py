@@ -1,6 +1,6 @@
 '''Constants for water provider portal.'''
 
-VERSION = '0.0.10'
+VERSION = '0.0.11'
 
 # (HASS) same as in manifest.json
 DOMAIN = 'portail_eau_fr'
