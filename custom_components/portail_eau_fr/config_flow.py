@@ -39,7 +39,7 @@ _LOGGER = logging.getLogger(__name__)
 
 def assert_flow_step(step: str):
     """Assert that the current function is the expected flow step."""
-    assert (PREFIX_STEP+step == inspect.stack()[1].function)
+    assert (PREFIX_STEP + step == inspect.stack()[1].function)
 
 
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):

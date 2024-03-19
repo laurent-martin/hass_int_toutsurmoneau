@@ -1,9 +1,7 @@
 {
-    "autopep8.importStrategy": "useBundled",
-    "autopep8.ignore": "E402",
-    "python.linting.pylintArgs": [
-        "--disable=C0114",
-        "--disable=C0115",
-        "--disable=C0116"
-    ],
+  "autopep8.importStrategy": "useBundled",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnSave": true
+  }
 }

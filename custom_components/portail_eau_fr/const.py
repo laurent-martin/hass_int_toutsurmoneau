@@ -7,6 +7,7 @@ DOMAIN = 'portail_eau_fr'
 
 # prefix of method name for steps
 PREFIX_STEP = 'async_step_'
+
 # the various form steps
 STEP_USER_START = 'user'
 STEP_GET_METER_ID = 'get_identifier'
