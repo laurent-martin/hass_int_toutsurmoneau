@@ -4,3 +4,8 @@ aiohttp
 clientsession
 hass
 portail
+hacs
+ssdp
+zeroconf
+homekit
+codeowners
