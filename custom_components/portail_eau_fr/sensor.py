@@ -40,7 +40,7 @@ class ToutSurMonEauEntity(SensorEntity):
     def __init__(self, api: toutsurmoneau.AsyncClient, account):
         '''Initialize the ToutSurMonEauEntity class.'''
         _LOGGER.debug('__init__')
-        self._name = f'{account['brandCode']} meter {api._id}'
+        self._name = f'{account["brandCode"]} meter {api._id}'
         self._unit_of_measurement = UnitOfVolume.LITERS
         self._state = None
         self._attr_attribution = account['brandCode']
