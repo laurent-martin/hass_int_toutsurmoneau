@@ -2,15 +2,15 @@
 from __future__ import annotations
 
 import inspect
-import toutsurmoneau
 import logging
 import asyncio
-from urllib.parse import urlparse
+# from urllib.parse import urlparse
 from typing import Any
+import toutsurmoneau
 import voluptuous as vol
-from homeassistant.core import HomeAssistant
+# from homeassistant.core import HomeAssistant
+# from homeassistant.exceptions import HomeAssistantError
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.helpers.selector import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -39,7 +39,7 @@ _LOGGER = logging.getLogger(__name__)
 
 def assert_flow_step(step: str):
     '''Assert that the current function is the expected flow step.'''
-    assert (PREFIX_STEP + step == inspect.stack()[1].function)
+    assert PREFIX_STEP + step == inspect.stack()[1].function
 
 
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -92,7 +92,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                     # no error: go to next step
                     return await self.async_step_get_identifier()
                 except Exception as e:  # pylint: disable=broad-except
-                    _LOGGER.exception(f'Error: {e}')
+                    _LOGGER.exception('Error: %s',e)
                     errors_for_form['base'] = 'unknown'
             else:
                 errors_for_form['base'] = 'login_failed'
@@ -132,8 +132,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         '''Handle the meter id step.'''
         assert_flow_step(STEP_GET_METER_ID)
-        _LOGGER.debug('get_identifier, default = %s',
-                      self.data['default_meter_id'])
+        _LOGGER.debug('get_identifier, default = %s',self.data['default_meter_id'])
         # prepare error message for input form, in case there is a problem
         errors_for_form: dict[str, str] = {}
         # input was provided (second call)
@@ -145,7 +144,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                 # check by getting meter specific data
                 await client.async_monthly_recent()
             except Exception as e:  # pylint: disable=broad-except
-                _LOGGER.exception(f'Error: {e}')
+                _LOGGER.exception('Error: %s',e)
                 errors_for_form['base'] = 'unknown'
             else:
                 # configuration data to be stored in hass
@@ -194,7 +193,7 @@ class MonEauOptionsFlow(OptionsFlow):
     ) -> FlowResult:
         '''Show options menu.'''
         assert_flow_step(STEP_INIT)
-        _LOGGER.debug('in {STEP_INIT}')
+        _LOGGER.debug('in %s',STEP_INIT)
         return self.async_show_menu(
             step_id=STEP_INIT,
             menu_options=[
@@ -208,24 +207,24 @@ class MonEauOptionsFlow(OptionsFlow):
     ) -> FlowResult:
         '''Import historical data.'''
         assert_flow_step(STEP_IMPORT)
-        _LOGGER.debug(f'in {STEP_IMPORT}')
+        _LOGGER.debug('in %s',STEP_IMPORT)
         if not self._import_task:
-            _LOGGER.debug(f'create initial task')
+            _LOGGER.debug('create initial task')
             self._import_index = 5
             self._import_task = self.hass.async_create_task(
                 self._async_import_historical_data()
             )
         if not self._import_task.done():
-            _LOGGER.debug(f'show progress ...')
+            _LOGGER.debug('show progress ...')
             return self.async_show_progress(
                 step_id=STEP_IMPORT,
                 progress_action=STEP_IMPORT,
                 progress_task=self._import_task
             )
-        _LOGGER.debug(f'task {self._import_index} done')
+        _LOGGER.debug('task %d done',self._import_index)
         self._import_index -= 1
         if self._import_index > 0:
-            _LOGGER.debug(f'create next task')
+            _LOGGER.debug('create next task')
             self._import_task = self.hass.async_create_task(
                 asyncio.sleep(2)
             )
@@ -238,6 +237,7 @@ class MonEauOptionsFlow(OptionsFlow):
         return self.async_show_progress_done(next_step_id=STEP_FINISH)
 
     async def async_step_finish(self, user_input=None):
+        '''Finish the flow.'''
         assert_flow_step(STEP_FINISH)
         if not user_input:
             return self.async_show_form(step_id=STEP_FINISH)
@@ -245,5 +245,5 @@ class MonEauOptionsFlow(OptionsFlow):
 
     async def _async_import_historical_data(self):
         '''Import historical data.'''
-        _LOGGER.debug(f'Starting task {self._import_index} ...')
+        _LOGGER.debug('Starting task %d ...',self._import_index)
         return asyncio.sleep(1)

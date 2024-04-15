@@ -1,5 +1,5 @@
 '''Sensor for water provider portal.'''
-from datetime import datetime, timedelta
+from datetime import timedelta
 import logging
 import toutsurmoneau
 from homeassistant.components.sensor import (
@@ -93,7 +93,6 @@ class ToutSurMonEauEntity(SensorEntity):
     def usage(self):
         '''Return ???.'''
         _LOGGER.debug('usage')
-        return None
 
     @property
     def available(self):

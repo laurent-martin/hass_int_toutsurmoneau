@@ -1,8 +1,8 @@
 '''The Tout sur mon eau integration.'''
 from __future__ import annotations
 
-import toutsurmoneau
 import logging
+import toutsurmoneau
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -22,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 # called after async_create_entry with data from config_flow
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     '''Set up Tout sur mon eau from a config entry.'''
-    _LOGGER.debug(f'async_setup_entry: version: {VERSION}, config: {entry.data}')
+    _LOGGER.debug('async_setup_entry: version: %s, config: %s',VERSION,entry.data)
 
     hass.data.setdefault(DOMAIN, {})
     # Create API instance
@@ -33,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         url=entry.data['url'],
         session=async_get_clientsession(hass),
     )
-    _LOGGER.debug(f'Client created. Checking credentials')
+    _LOGGER.debug('Client created. Checking credentials')
     # Validate the API connection (and authentication)
     if not await client.async_check_credentials():
         return False
