@@ -9,7 +9,7 @@
   "issue_tracker": "https://github.com/laurent-martin/hass_int_toutsurmoneau/issues",
   "homekit": {},
   "iot_class": "cloud_polling",
-  "requirements": ["toutsurmoneau==0.0.25"],
+  "requirements": ["toutsurmoneau==0.0.26"],
   "loggers": ["portail_eau_fr", "toutsurmoneau"],
   "ssdp": [],
   "zeroconf": []
