@@ -142,7 +142,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
                 client: toutsurmoneau.AsyncClient = self.data['client']
                 client._id = user_input[USER_INPUT_METER_ID]
                 # check by getting meter specific data
-                await client.async_monthly_recent()
+                await client.async_latest_meter_reading()
             except Exception as e:  # pylint: disable=broad-except
                 _LOGGER.exception('Error: %s',e)
                 errors_for_form['base'] = 'unknown'
