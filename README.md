@@ -70,3 +70,10 @@ logger:
     toutsurmoneau: debug
     custom_components.toutsurmoneau: debug
 ```
+
+## Development
+
+```bash
+make bumpver
+make release
+```
